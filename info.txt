@@ -1,0 +1,40 @@
+AB project #1
+
+Python:
+Izveidot palaižamu skriptu (vizuālais absolūti nav primāri, viss var notikt komandrindā)
+DB of choice - MySQL vai PostgreSQL (izvēlei vajag pamatojumu)
+Ik pa X minūtēm lasīt "https://www.delfi.lv/news/zinas" pēdējās Z lapas
+Saglabāt datubāzē raksta - saiti, nosaukumu, datumu, cik reizes šērots FB, galvenā attēla info un 2 papildu parametrus - vai klāt ir video/vai klāt ir fotogalerija
+
+Katram rakstam reizi Y minūtēs (tātad rakstu un komentāru lasīšanas biežums var atšķirties) tiek lasīti anonīmie komentāri
+Komentāram tiek saglabāts - komentāra ID (ko piešķir delfi), autora vārds, datums, komentāra teksts, upvote count, downvote count, parent ID (ja tā ir atbilde kādam komentāram - tad tā komentāra, uz kuru atbild, ID)
+
+Nepieļaut dublikātu saglabāšanu - ja raksts vai komentārs jau ir saglabāts, to nesaglabāt divreiz. Ja ir divi vienādi raksti vai komentāri, tos gan saglabāt.
+X un Y parametrus lasīt un atjaunot no datubāzes
+datubāzē tabula config, kur ir 2 kolonnas - key un value. Tur glabājas X un Y vērtības un varbūt vēl kaut kas, ja vajag.
+Value tips varchar (text) un tad, kad saņem no DB kodā, tad noparsē vajadzīgo par skaitli un no tā izsecini, kad jāiesāk nākamais process.
+Config tabulā glabājas X (ik pa cik minūtēm lasīt postus), Z (cik pēdējās lapas lasīt), Y (ik pa cik minūtēm lasīt komentārus), ceļš uz mapi, kurā tiek glabāti rakstu attēli
+
+DB log tabula:
+    - Lasīšanas darbību žurnāls: tiek saglabāts procesa nosaukums (lasa rakstus, lasa komentārus) un kāds statuss (STARTED, ERROR - ja kaut kas noiet greizi, DONE), start time, end time, comments (pagaidām tukšs. Ja notiek errors, tad error message vai stack var šeit saglabāt. comments lauka limits - 5k simboli)
+
+
+Attēli:
+Tiek glabāts tikai raksta pirmais attēls pat tad, ja ir pieejama galerija.
+Labākā pieeja - lejupielādēt attēlu un saglabāt konkrētā mapē. Attēla nosaukums glabājas datubāzē raksta tabulā.
+
+
+Rezultātā - palaiž skriptu un automātiski visu laiku atjaunojas visi Delfu raksti un komentāri.
+
+Paredzēt, ka projektam būs jāveic papildinājumi.
+
+Uzdevuma mērķi:
+ - izprast, kā pētīt un tikt galā ar web pieprasījumiem
+ - izprast request headers, nozīmīgos, obligātos, kā tos apiet, ģenerēt, viltot
+ - Iepazīties ar web satura analīzi web scrape procesā
+ - Mēģināt veidot korektu projekta struktūru
+ - Praktizēt automatizētu procesu veidošanu
+ - Praktizēt labās koda prakses (clean & defensive code)
+ - Veidot projektu maksimāli dinamisku, lai pēc iespējas mazāk vērtību būtu hardkodētas un visu varētu pielāgot (kaut vai pa taisno DB)
+
+ Datu lasīšanai neizmantot Selenium, bet requests un html.parser bibliotēkas (var arī citas šo vietā un kaut ko extra klāt)
