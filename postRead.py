@@ -1,5 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
+import json
+import time
 
 
 def flipPages(pages):
@@ -37,6 +39,87 @@ def readPost(page):
         # Final Print for post
         print("\nTitle - ", title, "\n Photo Link - ", photo, "\n Comment Count - ", comments, "\n Link - ",
               link, "\n ID - ", id, "\n Facebook Shares - ", fbShares, "\n Author/s - ", author, "\n")
+        print("---------------------------------Comment Scrape for post (",
+              id, ")", "---------------------------------")
+        commentRead(id)
+
+
+def countGet(id):
+    print(id)
+    link = "https://api.delfi.lv/comment/v1/graphql"
+    payload = "{\"operationName\":\"cfe_getComments\",\"variables\":{\"articleId\":"+id + \
+        ",\"modeType\":\"ANONYMOUS_MAIN\",\"orderBy\":\"DATE_ASC\",\"limit\":20,\"offset\":0,\"limitReplies\":3,\"orderByReplies\":\"DATE_DESC\"},\"query\":\"fragment CommentBody on Comment {\\n  id\\n  subject\\n  content\\n  created_time\\n  created_time_unix\\n  article_entity {\\n    article_id\\n    count_total\\n    count_anonymous\\n    __typename\\n  }\\n  vote {\\n    up\\n    down\\n    sum\\n    __typename\\n  }\\n  author {\\n    id\\n    customer_id\\n    idp_id\\n    __typename\\n  }\\n  parent_comment {\\n    id\\n    subject\\n    __typename\\n  }\\n  quote_to_comment {\\n    id\\n    subject\\n    __typename\\n  }\\n  reaction {\\n    comment_id\\n    name\\n    reaction\\n    count\\n    __typename\\n  }\\n  count_replies\\n  count_registered_replies\\n  status\\n  __typename\\n}\\n\\nquery cfe_getComments($articleId: Int!, $modeType: ModeType!, $offset: Int, $limit: Int, $orderBy: OrderBy, $limitReplies: Int, $orderByReplies: OrderBy, $lastCommentId: Int, $commentsBefore: Boolean) {\\n  getCommentsByArticleId(article_id: $articleId) {\\n    article_id\\n    count_total\\n    count_total_main_posts\\n    count_registered\\n    count_registered_main_posts\\n    count_anonymous_main_posts\\n    count_anonymous\\n    comments(mode_type: $modeType, offset: $offset, limit: $limit, orderBy: $orderBy) {\\n      ...CommentBody\\n      replies(lastCommentId: $lastCommentId, commentsBefore: $commentsBefore, limit: $limitReplies, orderBy: $orderByReplies) {\\n        ...CommentBody\\n        __typename\\n      }\\n      __typename\\n    }\\n    __typename\\n  }\\n}\\n\"}"
+    header = {
+        "Content-type": "application/json",
+        "Origin": "https://www.delfi.lv/",
+        "Cookie": "Some random cookie"
+    }
+
+    req = requests.post(link, headers=header, data=payload)
+    res = json.loads(req.text)
+
+    try:
+        return res['data']['getCommentsByArticleId']['count_total']
+    except:
+        print("No comments found")
+        return
+
+
+def comments(offset, res):
+    iter = 20
+    for i in range(iter):
+        print("\n", i, "\n")
+        print("Time - ", res['data']['getCommentsByArticleId']
+              ['comments'][i]['created_time'])
+        print("Subject - ", res['data']
+              ['getCommentsByArticleId']['comments'][i]['subject'])
+        print("Content - ", res['data']
+              ['getCommentsByArticleId']['comments'][i]['content'])
+        print("Reply Count - ",
+              res['data']['getCommentsByArticleId']['comments'][i]['count_replies'])
+        print("Parent Comment - ",
+              res['data']['getCommentsByArticleId']['comments'][i]['parent_comment'])
+        print("Parent Comment - ",
+              res['data']['getCommentsByArticleId']['comments'][i]['parent_comment'])
+
+        try:
+            print("Likes - ", res['data']['getCommentsByArticleId']
+                  ['comments'][0]['reaction'][0]['count'])
+        except:
+            print("Likes - 0")
+
+        try:
+            print("Dislikes - ", res['data']['getCommentsByArticleId']
+                  ['comments'][0]['reaction'][1]['count'])
+        except:
+            print("Dislikes - 0")
+
+    return offset+iter
+
+
+def commentRead(id):
+    offset = 0
+    count = countGet(id)
+    while(offset != count):
+        print(offset)
+        time.sleep(2)
+
+        link = "https://api.delfi.lv/comment/v1/graphql"
+        payload = "{\"operationName\":\"cfe_getComments\",\"variables\":{\"articleId\":"+id + \
+            ",\"modeType\":\"ANONYMOUS_MAIN\",\"orderBy\":\"DATE_ASC\",\"limit\":20,\"offset\":"+str(offset) + ",\"limitReplies\":3,\"orderByReplies\":\"DATE_DESC\"},\"query\":\"fragment CommentBody on Comment {\\n  id\\n  subject\\n  content\\n  created_time\\n  created_time_unix\\n  article_entity {\\n    article_id\\n    count_total\\n    count_anonymous\\n    __typename\\n  }\\n  vote {\\n    up\\n    down\\n    sum\\n    __typename\\n  }\\n  author {\\n    id\\n    customer_id\\n    idp_id\\n    __typename\\n  }\\n  parent_comment {\\n    id\\n    subject\\n    __typename\\n  }\\n  quote_to_comment {\\n    id\\n    subject\\n    __typename\\n  }\\n  reaction {\\n    comment_id\\n    name\\n    reaction\\n    count\\n    __typename\\n  }\\n  count_replies\\n  count_registered_replies\\n  status\\n  __typename\\n}\\n\\nquery cfe_getComments($articleId: Int!, $modeType: ModeType!, $offset: Int, $limit: Int, $orderBy: OrderBy, $limitReplies: Int, $orderByReplies: OrderBy, $lastCommentId: Int, $commentsBefore: Boolean) {\\n  getCommentsByArticleId(article_id: $articleId) {\\n    article_id\\n    count_total\\n    count_total_main_posts\\n    count_registered\\n    count_registered_main_posts\\n    count_anonymous_main_posts\\n    count_anonymous\\n    comments(mode_type: $modeType, offset: $offset, limit: $limit, orderBy: $orderBy) {\\n      ...CommentBody\\n      replies(lastCommentId: $lastCommentId, commentsBefore: $commentsBefore, limit: $limitReplies, orderBy: $orderByReplies) {\\n        ...CommentBody\\n        __typename\\n      }\\n      __typename\\n    }\\n    __typename\\n  }\\n}\\n\"}"
+        header = {
+            "Content-type": "application/json",
+            "Origin": "https://www.delfi.lv/",
+            "Cookie": "Some random cookie"
+        }
+
+        req = requests.post(link, headers=header, data=payload)
+        res = json.loads(req.text)
+        try:
+            offset = comments(offset, res)
+        except:
+            print("Finished reading")
+            return
 
 
 def facebookShares(post):
