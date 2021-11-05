@@ -21,8 +21,8 @@ tables['post'] = (
     "  `link` VARCHAR(250) NOT NULL,"
     "  `title` VARCHAR(250),"
     "  `date` TIMESTAMP NOT NULL,"
-    "  `fbShares` INT,"
-    "  `photoName` VARCHAR (250),"
+    "  `fb_shares` INT,"
+    "  `photo_name` VARCHAR (250),"
     "  `post_id` NUMERIC NOT NULL UNIQUE,"
     "  `author` VARCHAR (250),"
     "  PRIMARY KEY (`post_id`)"
@@ -44,15 +44,14 @@ tables['post_comment'] = (
 
 tables['config'] = (
     "CREATE TABLE `config`("
-    "   `x` VARCHAR (10) NOT NULL,"
-    "   `Z` VARCHAR (10) NOT NULL,"
-    "   `Y` VARCHAR (10) NOT NULL"
+    "   `key` VARCHAR (10) NOT NULL,"
+    "   `value` VARCHAR (10) NOT NULL"
     ") ENGINE=InnoDB")
 
 
 tables['db_log'] = (
     "CREATE TABLE `db_log`("
-    "   `procesName` VARCHAR (250) NOT NULL,"
+    "   `process_name` VARCHAR (250) NOT NULL,"
     "   `status` VARCHAR (250) NOT NULL,"
     "   `start_time` TIMESTAMP,"
     "   `end_time` TIMESTAMP,"

@@ -6,11 +6,11 @@ import requests
 
 logger = get_logger(__name__)
 
-pages = 1
+pages = 2
 
 
 # readPost()
 
 flipPages(pages)
 
-# commentRead(str(53740237))
+# commentRead(str(53731259))
