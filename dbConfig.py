@@ -22,6 +22,7 @@ tables['post'] = (
     "  `title` VARCHAR(250),"
     "  `date` TIMESTAMP NOT NULL,"
     "  `fb_shares` INT,"
+    "   `comment_count` INT,"
     "  `photo_name` VARCHAR (250),"
     "  `post_id` NUMERIC NOT NULL UNIQUE,"
     "  `author` VARCHAR (250),"
@@ -30,22 +31,24 @@ tables['post'] = (
 
 tables['post_comment'] = (
     "CREATE TABLE `post_comment`("
-    "   `post_id` NUMERIC NOT NULL UNIQUE,"
+    "   `post_id` NUMERIC NOT NULL,"
     "   `comment_id` NUMERIC NOT NULL UNIQUE,"
     "   `author` VARCHAR (250),"
     "   `date` TIMESTAMP,"
+    "   `comment_subject` VARCHAR (100),"
     "   `comment_body` VARCHAR (1000),"
     "   `upvote_count` NUMERIC,"
     "   `downvote_count` NUMERIC,"
     "   `parent_id` NUMERIC,"
+    "   `reply_count` NUMERIC,"
     "  PRIMARY KEY (`comment_id`),"
     "  FOREIGN KEY (`post_id`) REFERENCES post(post_id)"
     ") ENGINE=InnoDB")
 
 tables['config'] = (
     "CREATE TABLE `config`("
-    "   `key` VARCHAR (10) NOT NULL,"
-    "   `value` VARCHAR (10) NOT NULL"
+    "   `identifier` VARCHAR (100) NOT NULL UNIQUE,"
+    "   `value` VARCHAR (20) NOT NULL"
     ") ENGINE=InnoDB")
 
 
