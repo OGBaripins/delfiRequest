@@ -1,4 +1,4 @@
-AB project #1
+logAB project #1
 
 Python:
 Izveidot palaižamu skriptu (vizuālais absolūti nav primāri, viss var notikt komandrindā)

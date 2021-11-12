@@ -1,16 +1,5 @@
-from log import get_logger
-from postRead import flipPages
-from postRead import commentRead
-from bs4 import BeautifulSoup
-import requests
+from postRead import flipPages, setUp, updateConf
 
-logger = get_logger(__name__)
+setUp()
+flipPages()
 
-pages = 1
-
-
-# readPost()
-
-flipPages(pages)
-
-# commentRead(str(53740237))
