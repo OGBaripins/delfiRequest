@@ -43,39 +43,49 @@ def _post_comment(values):
         mydb.close()
     except Exception as err:
         mydb.rollback()
-        print("+++++++++++++++++++++++++++++++++++++++++++++++++++",err)
+        print(err)
         
 
 
 def _config(values):
     mydb = con()
     cur = mydb.cursor()
-    print(values)
     try:
-        sql_config = ("INSERT INTO config (identifier, value)"
+        sql_config = ("INSERT IGNORE INTO config (identifier, value)"
                       "VALUES (%s, %s)")
         cur.execute(sql_config, values)
     except mysql.connector.Error as err:
         ("Duplicate entry, tryingto update table\n", err)
-        _config_update(values)
     mydb.commit()
     cur.close()
     mydb.close()
 
-def _config_update(values):
+def _config_update (values):
     mydb = con()
-    values = tuple(reversed(values))
-    cur = mydb.cursor()
-    print(values)
+    cur = mydb.cursor() 
     try:
         sql_config_update = ("UPDATE config SET value = %s WHERE identifier = %s")
-        cur.execute(sql_config_update, values)
+        cur.execute(sql_config_update, tuple(reversed(values)))
         print("Tables were updated successfully")
     except mysql.connector.Error as err:
         print("Tables could not be updated\n",err)
     mydb.commit()
     cur.close()
     mydb.close()
+
+def get_config():
+    mydb = con()
+    cur = mydb.cursor()
+    try:
+        sql_config_get = ("SELECT * FROM config")
+        (cur.execute(sql_config_get))
+        conf = cur.fetchall()
+    except mysql.connector.Error as err:
+        print("Tables could not be updated\n",err)
+    cur.close()
+    mydb.close()
+    return conf
+    
 
 
 def _db_log(values):

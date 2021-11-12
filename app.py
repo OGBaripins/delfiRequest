@@ -1,11 +1,5 @@
-from log import get_logger
-from postRead import flipPages, setUp
-
-logger = get_logger(__name__)
-
-pages = 1
+from postRead import flipPages, setUp, updateConf
 
 setUp()
-
-# flipPages(pages)
+flipPages()
 
